@@ -7,15 +7,19 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /** @author Joshua Paul Dorsett
+ * 
+ * this class opens the JavaFX application and navigates to the main page
  */
 public class JoshuaPaulDorsettC482 extends Application {
     
     /**
-     *
-     * @param args
+     * main method which launches application
      */
     public static void main(String[] args) { launch(args); }
     
+    /**
+     * start method which navigates to main page
+     */
     @Override
     public void start(Stage stage) throws Exception{        
         Parent root = FXMLLoader.load(getClass().getResource("mainPage.fxml"));

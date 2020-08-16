@@ -27,12 +27,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * FXML Controller class for main page
  *
  * @author joshuadorsett
  */
 public class MainPageController implements Initializable {
-//    FXid's
     @FXML
     private TableView<Part> MainPartsTableView;
     @FXML
@@ -58,24 +57,25 @@ public class MainPageController implements Initializable {
     @FXML
     private TextField MainProductsSearchField;
 
-//    class attributes
+    /**
+     * class attributes
+     */
     private static Part modifyPart; /*the selected part to be modified*/
     private static int modifyPartIndex; /*the index of the selected part*/
     private static Product modifyProduct; /*the selected product to be modified*/
     private static int modifyProductIndex; /*the index of the selected product*/
+    
     /**
      * Initializes the controller class.
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //         load parts table
         MainPartsTableView.setItems(Inventory.getAllParts()); 
-        MainPartIDCol.setCellValueFactory(new PropertyValueFactory<>("partId"));
-        MainPartNameCol.setCellValueFactory(new PropertyValueFactory<>("partName"));
-        MainPartInvCol.setCellValueFactory(new PropertyValueFactory<>("partInv"));
-        MainPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("partPrice"));
+        MainPartIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        MainPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        MainPartInvCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        MainPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 //         load products table
         MainProductsTableView.setItems(Inventory.getAllProducts());
         MainProductsIDCol.setCellValueFactory(new PropertyValueFactory<>("productId"));
@@ -84,7 +84,10 @@ public class MainPageController implements Initializable {
         MainProductsPriceCol.setCellValueFactory(new PropertyValueFactory<>("productPrice"));
     }    
     
-//      the search field for parts.
+      /**
+       * the search field for parts.
+       * @param event event
+       */
     @FXML
     void MainPartsSearch(ActionEvent event){
         String searchPart = MainPartsSearchField.getText();
@@ -109,7 +112,10 @@ public class MainPageController implements Initializable {
         
     }
      
-//      the search field for products.
+      /**
+       * the search field for products.
+       * @param event event
+       */
     @FXML
     void MainProductsSearchField(ActionEvent event) {
         String searchProduct = MainProductsSearchField.getText();
@@ -132,27 +138,76 @@ public class MainPageController implements Initializable {
             }
         }    
     }
-    
-//    opens the add parts scene
 
     /**
-     *
-     * @param event
+     * opens the add parts scene
+     * @param event event
      * @throws IOException
      */
     @FXML
     public void MainPartsAdd(ActionEvent event) throws IOException {
         sceneChange("addPart.fxml", event);
     }
+    
+    /**
+     * validate part and return error message
+     * @param name is checked to see if it's empty
+     * @param price must be greater than 0
+     * @param inv must be greater than 0 and between min and max
+     * @param min must be less than max and inv
+     * @param max must be greater than min and inv
+     * @param exceptionMessage this empty string will carry the message
+     * @return the full exception message string
+     */
+    public static String validPart(String name, double price, int inv, int min, int max, String exceptionMessage) {
+        if (name.isEmpty()) exceptionMessage = exceptionMessage + ("Name cannot be empty. ");         
+        if (price < 1) exceptionMessage = exceptionMessage + ("Price must be greater than 0. ");         
+        if (inv < 1) exceptionMessage = exceptionMessage + ("Inventory must be greater than 0. ");         
+        if (min > max) exceptionMessage = exceptionMessage + ("Min must be less than Max. ");      
+        if (inv < min || inv > max) exceptionMessage = exceptionMessage + ("Inventory must be between Min and Max. ");   
+        return exceptionMessage;
+    }
  
-//    opens the add products scene
+    /**
+     * opens the add products scene
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
     void MainProdAdd(ActionEvent event) throws IOException {
         sceneChange("addProduct.fxml", event);
 
     }
     
-//    opens the modify parts scene
+    /**
+     * validate product and return an error message
+     * @param name is checked to see if it's empty
+     * @param price must be greater than 0 
+     * @param inv must be greater than 0 and between min and max
+     * @param min must be less than max and inv
+     * @param max must be greater than min and inv
+     * @param parts must have at least one associated part
+     * @param exceptionMessage this empty string will carry the message
+     * @return the full exception message string
+     */
+    public static String validProduct(String name, double price, int inv, int min, int max, ObservableList<Part> parts, String exceptionMessage) {
+        double partsCost = 0.00;
+        for (Part p : parts) partsCost = partsCost + p.getPrice();
+        
+        if (name.isEmpty()) exceptionMessage = exceptionMessage + ("Name cannot be empty. "); 
+        if (price < 0) exceptionMessage = exceptionMessage + ("Price must be greater than 0. ");
+        if (inv < min || inv > max) exceptionMessage = exceptionMessage + ("Inventory must be between Min and Max. ");
+        if (min < 0) exceptionMessage = exceptionMessage + ("Inventory must be greater than 0. ");
+        if (min > max) exceptionMessage = exceptionMessage + ("Min must be less than Max. ");
+        if (partsCost > price) exceptionMessage = exceptionMessage + ("Price of product must be greater than cost of all associated parts. ");
+        return exceptionMessage;
+    }
+    
+    /**
+     * opens the modify parts scene
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
     void MainPartsModify(ActionEvent event) throws IOException  {
         modifyPart = MainPartsTableView.getSelectionModel().getSelectedItem();
@@ -160,6 +215,7 @@ public class MainPageController implements Initializable {
         sceneChange("modifyPart.fxml", event);
 
     }
+    
     /**
      * @return modifyPartIndex
      */
@@ -167,22 +223,29 @@ public class MainPageController implements Initializable {
         return modifyPartIndex;
     }
      
-//    opens the modify products scene
+    /**
+     * opens the modify products scene
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
     void MainProdModify(ActionEvent event) throws IOException {
         modifyProduct = MainProductsTableView.getSelectionModel().getSelectedItem();
         modifyProductIndex = Inventory.getAllProducts().indexOf(modifyProduct);        
         sceneChange("modifyProduct.fxml", event);
     }
+    
     /**
-     *
      * @return modifyProductIndex
      */
     public static int productToModifyIndex() {
         return modifyProductIndex;
     }
     
-//    deletes the selected part
+    /**
+     * deletes the selected part
+     * @param event event
+     */
     @FXML
     void MainPartsDelete(ActionEvent event) {
         Part part = MainPartsTableView.getSelectionModel().getSelectedItem();
@@ -190,22 +253,26 @@ public class MainPageController implements Initializable {
         alert.initModality(Modality.NONE);
         alert.setTitle("Product Delete");
         alert.setHeaderText("Confirm?");
-        alert.setContentText("Are you sure you want to delete " + part.getPartName() + "?");
+        alert.setContentText("Are you sure you want to delete " + part.getName() + "?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             Inventory.deletePart(part);
             ObservableList<Part> update = Inventory.getAllParts();
             MainPartsTableView.setItems(update);               
-            System.out.println("Part " + part.getPartName() + " was removed.");
+            System.out.println("Part " + part.getName() + " was removed.");
         } else {
-            System.out.println("Part " + part.getPartName() + " was not removed.");
+            System.out.println("Part " + part.getName() + " was not removed.");
         }
         Inventory.deletePart(part);
         ObservableList<Part> update = Inventory.getAllParts();
         MainPartsTableView.setItems(update);
     }
 
-//    deletes the selected product
+    /**
+     * deletes the selected product if there are no associated parts
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
     void MainProdDelete(ActionEvent event) throws IOException {
         Product product = MainProductsTableView.getSelectionModel().getSelectedItem();
@@ -216,16 +283,27 @@ public class MainPageController implements Initializable {
         alert.setContentText("Are you sure you want to delete " + product.getProductName() + "?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
+            if ( !product.getAssociatedParts().isEmpty()){
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error deleting product");
+                alert.setHeaderText("Error");
+                alert.setContentText("cannot delete product with an associated part");
+                alert.showAndWait();
+            } else {
             Inventory.deleteProduct(product);
             ObservableList<Product> update = Inventory.getAllProducts();
             MainProductsTableView.setItems(update);                
             System.out.println("Part " + product.getProductName() + " was removed.");
+            }
         } else {
             System.out.println("Part " + product.getProductName() + " was not removed.");
         }
     }
 
-//    this exits the program
+    /**
+     * exits the program
+     * @param event event
+     */
     @FXML
      void MainExit(ActionEvent event) {
          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -241,10 +319,8 @@ public class MainPageController implements Initializable {
         }
     }
 
-//    this provides the scene change code and accepts the new Path and the event as args
-
     /**
-     *
+     * changes scene
      * @param path of the new scene
      * @param event that caused the scene change
      * @throws IOException

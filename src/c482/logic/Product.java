@@ -4,9 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /** @author Joshua Paul Dorsett
+ * 
+ * this class creates a product instance
  */
 public class Product {
-//      instance attributes
+    /**
+    * instance attributes
+    */
     private ObservableList<Part> associatedParts = FXCollections.observableArrayList();;
     private int productId;
     private String productName;
@@ -17,12 +21,12 @@ public class Product {
 
     /**
      * constructor
-     * @param productId
-     * @param productName
-     * @param productPrice
-     * @param productInv
-     * @param productMin
-     * @param productMax
+     * @param productId int
+     * @param productName String
+     * @param productPrice double
+     * @param productInv int
+     * @param productMin int
+     * @param productMax int
      */
     public Product(int productId, String productName, double productPrice, int productInv, int productMin, int productMax){
         this.productId = productId;
@@ -34,46 +38,85 @@ public class Product {
     }
 
     /**
-     * set/get methods for instance attributes
+     * @param id setter
      */
     public void setProductId(int id){
         this.productId = id; 
     }
+    
+    /**
+     * @return the productId
+     */
     public int getProductId(){ 
         return productId; 
     }
 
+    /**
+     * @param name setter
+     */
     public void setProductName(String name){ 
         this.productName = name; 
     }
+    
+    /**
+     * @return the productName
+     */
     public String getProductName(){ 
         return productName; 
     }
 
+    /**
+     * @param price setter
+     */
     public void setProductPrice(double price){ 
         this.productPrice = price; 
     }
+    
+    /**
+     * @return the id
+     */
     public double getProductPrice(){ 
         return productPrice; 
     }
 
+    /**
+     * @param inv setter
+     */
     public void setProductInv(int inv){ 
         this.productInv = inv; 
     }
+    
+    /**
+     * @return the productInv
+     */
     public int getProductInv(){ 
         return productInv; 
     }
 
+    /**
+     * @param min setter
+     */
     public void setProductMin(int min){
         this.productMin = min;
     }
+    
+    /**
+     * @return the productMin
+     */
     public int getProductMin(){ 
         return productMin; 
     }
 
+    /**
+     * @param max setter
+     */
     public void setProductMax(int max){ 
         this.productMax = max; 
     }
+    
+    /**
+     * @return the productMax
+     */
     public int getProductMax(){ 
         return productMax; 
     }
@@ -89,7 +132,7 @@ public class Product {
     /**
      * delete an associated part
      * @param part to be deleted
-     * @return true if deleted
+     * @return isDeleted
      */
     public boolean deleteAssociatedPart(Part part){
         this.associatedParts.remove(part);
@@ -105,34 +148,9 @@ public class Product {
     
     /**
      * get an associated part
-     * @return
+     * @return associatedParts
      */
     public ObservableList<Part> getAssociatedParts(){ 
         return this.associatedParts; 
-    }
-
-    /**
-     * validate product and return an error message
-     * @param name is checked to see if it's empty
-     * @param price must be greater than 0 
-     * @param inv must be greater than 0 and between min and max
-     * @param min must be less than max and inv
-     * @param max must be greater than min and inv
-     * @param parts must have at least one associated part
-     * @param exceptionMessage this empty string will carry the message
-     * @return the full exception message string
-     */
-    public static String validProduct(String name, double price, int inv, int min, int max, ObservableList<Part> parts, String exceptionMessage) {
-        double partsCost = 0.00;
-        for (Part p : parts) partsCost = partsCost + p.getPartPrice();
-        
-        if (name.equals("")) exceptionMessage = exceptionMessage + ("Name cannot be empty. "); 
-        if (price < 0) exceptionMessage = exceptionMessage + ("Price must be greater than 0. ");
-        if (inv < min || inv > max) exceptionMessage = exceptionMessage + ("Inventory must be between Min and Max. ");
-        if (min < 0) exceptionMessage = exceptionMessage + ("Inventory must be greater than 0. ");
-        if (min > max) exceptionMessage = exceptionMessage + ("Min must be less than Max. ");
-        if (parts.size() < 1) exceptionMessage = exceptionMessage + ("Product must contain at least 1 associated part. ");
-        if (partsCost > price) exceptionMessage = exceptionMessage + ("Price of product must be greater than cost of all associated parts. ");
-        return exceptionMessage;
     }
 }

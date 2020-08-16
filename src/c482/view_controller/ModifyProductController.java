@@ -28,12 +28,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * FXML Controller class for modify product page
  *
  * @author joshuadorsett
  */
 public class ModifyProductController implements Initializable {
-//    FXid's
     @FXML
     private Label modProductIdText;
     @FXML
@@ -69,7 +68,9 @@ public class ModifyProductController implements Initializable {
     @FXML
     private TableColumn<Part,Double> ModifyProductCurrentPartPriceCol;
     
-//  class attributes
+  /**
+   * class attributes
+   */
     private int productIndex = productToModifyIndex();
     private ObservableList<Product> allProducts;
     private Product product;
@@ -79,8 +80,6 @@ public class ModifyProductController implements Initializable {
 
     /**
      * Initializes the controller class.
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -104,25 +103,31 @@ public class ModifyProductController implements Initializable {
         
 //        init all parts table
         modAllPartsTableView.setItems(Inventory.getAllParts());
-        ModifyProductPartIDCol.setCellValueFactory(new PropertyValueFactory<>("partId"));
-        ModifyProductPartNameCol.setCellValueFactory(new PropertyValueFactory<>("partName"));
-        ModifyProductPartInvCol.setCellValueFactory(new PropertyValueFactory<>("partInv"));
-        ModifyProductPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("partPrice"));  
+        ModifyProductPartIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        ModifyProductPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        ModifyProductPartInvCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        ModifyProductPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));  
         
 //        init associated parts table
         generateModAssociatedPartsTable(currentParts);         
     }      
     
-//    generates an updated associated parts table
+    /**
+     * generates an updated associated parts table
+     * @param table table of current parts selected
+     */
     private void generateModAssociatedPartsTable(ObservableList<Part> table){
         modAssociatedPartsTableView.setItems(table);
-        ModifyProductCurrentPartIDCol.setCellValueFactory(new PropertyValueFactory<>("partId"));
-        ModifyProductCurrentPartNameCol.setCellValueFactory(new PropertyValueFactory<>("partName"));
-        ModifyProductCurrentPartInvCol.setCellValueFactory(new PropertyValueFactory<>("partInv"));
-        ModifyProductCurrentPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("partPrice"));  
+        ModifyProductCurrentPartIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        ModifyProductCurrentPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        ModifyProductCurrentPartInvCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        ModifyProductCurrentPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));  
     }
     
-//    searchfield for parts
+    /**
+     * search field for parts
+     * @param event event
+     */
     @FXML
     private void modAddPartsSearchField(ActionEvent event){
         String searchPart = modAddPartsSearchField.getText();
@@ -146,15 +151,18 @@ public class ModifyProductController implements Initializable {
         }
     }  
     
-//    adds an associated part
+    /**
+     * adds an associated part
+     * @param event event
+     */
     @FXML
     private void modAddassociatedPart(ActionEvent event) {
         Part part = modAllPartsTableView.getSelectionModel().getSelectedItem();
         boolean repeatedItem = false;
         if (part != null) {
-            int partId = part.getPartId();
+            int partId = part.getId();
             for (int i = 0; i < currentParts.size(); i++) {
-                if (currentParts.get(i).getPartId() == partId) {
+                if (currentParts.get(i).getId() == partId) {
                     repeatedItem = true;
                 }
             }
@@ -165,15 +173,33 @@ public class ModifyProductController implements Initializable {
         }
     }
     
-//    removes an associated part
+    /**
+     * removes an associated part
+     * @param event event
+     */
     @FXML
     private void modRemoveAssociatedPart(ActionEvent event) {
         Part part = modAssociatedPartsTableView.getSelectionModel().getSelectedItem();
+        if (part == null){
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirmation Needed");
+        alert.setHeaderText("Confirm removing associated part");
+        alert.setContentText("Are you sure you want to remove associated part?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
         currentParts.remove(part);
         generateModAssociatedPartsTable(currentParts);       
+        }
     }  
-
-//    cancels modifying the product
+        
+    /**
+     * cancels modifying the product
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
     private void modProductCancelButton(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -187,17 +213,20 @@ public class ModifyProductController implements Initializable {
         } 
     }
     
-//    validates and saves the product
+    /**
+     * validates and saves the product
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
-    private void modProductSaveButton(ActionEvent event) throws IOException {
-        
-        String name = ModProductNameText.getText();
-        String inv = ModProductInvText.getText();
-        String price = ModProductPriceText.getText();
-        String min = ModProductMinText.getText();
-        String max = ModProductMaxText.getText();
+    private void modProductSaveButton(ActionEvent event) throws IOException {  
         try {
-            exceptionMessage = Product.validProduct(name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max),
+            String name = ModProductNameText.getText();
+            String inv = ModProductInvText.getText();
+            String price = ModProductPriceText.getText();
+            String min = ModProductMinText.getText();
+            String max = ModProductMaxText.getText();
+            exceptionMessage = MainPageController.validProduct(name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max),
             currentParts, exceptionMessage);
             if (exceptionMessage.length() > 0) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -214,16 +243,16 @@ public class ModifyProductController implements Initializable {
             Inventory.updateProduct(productIndex, product);
             sceneChange("mainPage.fxml", event);
         } catch(NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error!");
-            alert.setHeaderText("Error!");
-            alert.setContentText("Fields cannot be empty!");
-            alert.showAndWait();
+            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+            alert2.setTitle("Error!");
+            alert2.setHeaderText("Error!");
+            alert2.setContentText("invalid input types!");
+            alert2.showAndWait();
         }       
     }
     
     /**
-     *
+     * changes scene
      * @param path of the new scene
      * @param event that caused the scene change
      * @throws IOException

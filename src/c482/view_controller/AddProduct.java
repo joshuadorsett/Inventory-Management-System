@@ -26,12 +26,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * FXML Controller class for add product page
  *
  * @author joshuadorsett
  */
 public class AddProduct implements Initializable {
-//    FXid's
+    
     @FXML
     private TextField AddProductNameText;
     @FXML
@@ -65,34 +65,37 @@ public class AddProduct implements Initializable {
     @FXML
     private TableColumn<Part, Double> addProductCurrentPartPriceCol;
     
-//  class attributes
+  /**
+   * class attributes
+   */
     private ObservableList<Part> currentParts = FXCollections.observableArrayList();
     private String exceptionMessage = new String();
 
     /**
      * Initializes the controller class.
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //        init the all parts table
         allPartsTableView.setItems(Inventory.getAllParts());
-        AddProductPartIDCol.setCellValueFactory(new PropertyValueFactory<>("partId"));
-        AddProductPartNameCol.setCellValueFactory(new PropertyValueFactory<>("partName"));
-        AddProductPartInvCol.setCellValueFactory(new PropertyValueFactory<>("partInv"));
-        AddProductPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("partPrice"));                           
+        AddProductPartIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        AddProductPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        AddProductPartInvCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        AddProductPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));                           
     }    
     
-//    add an associated part
+    /**
+     * add an associated part
+     * @param event event
+     */
     @FXML
     private void addPart(ActionEvent event) {
         Part part = allPartsTableView.getSelectionModel().getSelectedItem();
         boolean repeatedItem = false;
         if (part != null) {
-            int partId = part.getPartId();
+            int partId = part.getId();
             for (int i = 0; i < currentParts.size(); i++) {
-                if (currentParts.get(i).getPartId() == partId) {
+                if (currentParts.get(i).getId() == partId) {
                     repeatedItem = true;
                 }
             }
@@ -103,16 +106,22 @@ public class AddProduct implements Initializable {
         }
     }
      
-//    generates an updated associated parts table
+    /**
+     * generates an updated associated parts table
+     * @param table of current parts selection
+     */
     private void generateAssociatedPartsTable(ObservableList<Part> table){
         associatedPartsTableView.setItems(table);
-        addProductCurrentPartIDCol.setCellValueFactory(new PropertyValueFactory<>("partId"));
-        addProductCurrentPartNameCol.setCellValueFactory(new PropertyValueFactory<>("partName"));
-        addProductCurrentPartInvCol.setCellValueFactory(new PropertyValueFactory<>("partInv"));
-        addProductCurrentPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("partPrice"));  
+        addProductCurrentPartIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        addProductCurrentPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        addProductCurrentPartInvCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        addProductCurrentPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));  
     }
     
-//    searchfield for parts
+    /**
+     * search field for parts
+     * @param event event
+     */
     @FXML
     private void addPartsSearchField(ActionEvent event){
         String searchPart = addPartsSearchField.getText();
@@ -136,14 +145,32 @@ public class AddProduct implements Initializable {
         }
     }
      
-//    remove an associated part from product
+    /**
+     * remove an associated part from product
+     * @param event event
+     */
     @FXML
     private void RemoveAssociatedPart(ActionEvent event) {
         Part part = associatedPartsTableView.getSelectionModel().getSelectedItem();
+        if (part == null){
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirmation Needed");
+        alert.setHeaderText("Confirm removing associated part");
+        alert.setContentText("Are you sure you want to remove associated part?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
         currentParts.remove(part);
+        }
     }
 
-//    cancels the product
+    /**
+     * cancels the product
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
     private void addProductCancelButton(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -157,18 +184,21 @@ public class AddProduct implements Initializable {
         } 
     } 
     
-//    validates and saves the product
+    /**
+     * validates and saves the product
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
-    private void addProductSaveButton(ActionEvent event) throws IOException {
-       
-        String name = AddProductNameText.getText();
-        String inv = AddProductInvText.getText();
-        String price = AddProductPriceText.getText();
-        String min = AddProductMinText.getText();
-        String max = AddProductMaxText.getText();
-        int id = Inventory.getProductIdCounter();
+    private void addProductSaveButton(ActionEvent event) throws IOException {  
         try {
-            exceptionMessage = Product.validProduct(name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max),
+            String name = AddProductNameText.getText();
+            String inv = AddProductInvText.getText();
+            String price = AddProductPriceText.getText();
+            String min = AddProductMinText.getText();
+            String max = AddProductMaxText.getText();
+            int id = Inventory.getProductIdCounter();
+            exceptionMessage = MainPageController.validProduct(name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max),
             currentParts, exceptionMessage);
             if (exceptionMessage.length() > 0) {
 
@@ -184,17 +214,18 @@ public class AddProduct implements Initializable {
             product.addAssociatedPartsList(currentParts);
             Inventory.addProduct(product);
             sceneChange("mainPage.fxml", event);
+            
         } catch (NumberFormatException e){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error!");
-            alert.setHeaderText("Error!");
-            alert.setContentText("Fields cannot be empty!");
-            alert.showAndWait();
+            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+            alert2.setTitle("Error!");
+            alert2.setHeaderText("Error!");
+            alert2.setContentText("invalid input types!");
+            alert2.showAndWait();
         }
     }
     
     /**
-     *
+     * changes scene
      * @param path of the new scene
      * @param event that caused the scene change
      * @throws IOException
@@ -204,6 +235,7 @@ public class AddProduct implements Initializable {
         Scene addPartScene = new Scene(addPartParent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(addPartScene);
-        window.show();     
+        window.show();
+
     }
 }

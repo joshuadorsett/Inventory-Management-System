@@ -26,12 +26,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * FXML Controller class for modify part page
  *
  * @author joshuadorsett
  */
 public class ModifyPartController implements Initializable {
-//    FXid's
     @FXML
     private RadioButton InHouseRadioSelected;
     @FXML
@@ -53,23 +52,24 @@ public class ModifyPartController implements Initializable {
     @FXML
     private TextField modPartMachIdText;
     
-//    class attributes
+    /**
+     * class attributes
+     */
     private boolean outSourced;
     private int partIndex = partToModifyIndex();
     private ObservableList<Part> allParts; 
     private int partID;
     private String exceptionMessage = new String();
+    
     /**
      * Initializes the controller class.
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //        locate selected part to init
         allParts = Inventory.getAllParts();
         Part part = allParts.get(partIndex);
-        partID = allParts.get(partIndex).getPartId();
+        partID = allParts.get(partIndex).getId();
 
 //        init an InHouse part
         if (part instanceof InHouse) {
@@ -78,11 +78,11 @@ public class ModifyPartController implements Initializable {
             ModifyPartDynamicLabel.setText("Machine ID");
             modPartMachIdText.setText(Integer.toString(((InHouse) Inventory.getAllParts().get(partIndex)).getMachineId()));
             modPartIDText.setText(Integer.toString(partID));
-            modPartNameText.setText(part.getPartName());
-            modInvText.setText(Integer.toString(part.getPartInv()));
-            modPriceText.setText(Double.toString(part.getPartPrice()));
-            modMinText.setText(Integer.toString(part.getPartMin()));
-            modMaxText.setText(Integer.toString(part.getPartMax()));
+            modPartNameText.setText(part.getName());
+            modInvText.setText(Integer.toString(part.getStock()));
+            modPriceText.setText(Double.toString(part.getPrice()));
+            modMinText.setText(Integer.toString(part.getMin()));
+            modMaxText.setText(Integer.toString(part.getMax()));
 
 //        init OutSourced part
         } else {
@@ -90,15 +90,18 @@ public class ModifyPartController implements Initializable {
             outSourced = true;
             ModifyPartDynamicLabel.setText("Company Name");
             modPartMachIdText.setText(((OutSourced) Inventory.getAllParts().get(partIndex)).getCompanyName());
-            modPartNameText.setText(part.getPartName());
-            modInvText.setText(Integer.toString(part.getPartInv()));
-            modPriceText.setText(Double.toString(part.getPartPrice()));
-            modMinText.setText(Integer.toString(part.getPartMin()));
-            modMaxText.setText(Integer.toString(part.getPartMax()));
+            modPartNameText.setText(part.getName());
+            modInvText.setText(Integer.toString(part.getStock()));
+            modPriceText.setText(Double.toString(part.getPrice()));
+            modMinText.setText(Integer.toString(part.getMin()));
+            modMaxText.setText(Integer.toString(part.getMax()));
         }
     }    
 
-//    InHouse Radio button
+    /**
+     * InHouse Radio button
+     * @param event event
+     */
     @FXML
     private void InHouseSelected(ActionEvent event) {
         outSourced = false;
@@ -107,7 +110,10 @@ public class ModifyPartController implements Initializable {
 
     }
     
-//    OutSourced Radio Button
+    /**
+     * OutSourced Radio Button
+     * @param event event
+     */
     @FXML
     private void OutSourcedSelected(ActionEvent event) {
         outSourced = true;
@@ -116,7 +122,11 @@ public class ModifyPartController implements Initializable {
     }
 
     
-//    Cancel modifying part
+    /**
+     * Cancel modifying part
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
     private void CancelModifiedPart(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -130,18 +140,22 @@ public class ModifyPartController implements Initializable {
         }
     }
 
-//    validate and save the part
+    /**
+     * validate and save the part
+     * @param event event
+     * @throws IOException 
+     */
     @FXML
     private void saveModifiedPart(ActionEvent event) throws IOException { 
-        String name = modPartNameText.getText();
-        int inv = Integer.parseInt(modInvText.getText());
-        double price = Double.parseDouble(modPriceText.getText());
-        int min = Integer.parseInt(modMinText.getText());
-        int max = Integer.parseInt(modMaxText.getText());
-        String companyName;
-        int machineId;
         try {
-            exceptionMessage = Part.validPart(name, price, inv, min, max, exceptionMessage);
+            String name = modPartNameText.getText();
+            String inv = modInvText.getText();
+            String price = modPriceText.getText();
+            String min = modMinText.getText();
+            String max = modMaxText.getText();
+            String companyName;
+            int machineId;
+            exceptionMessage = MainPageController.validPart(name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max), exceptionMessage);
 
             if (exceptionMessage.length() > 0) {
 
@@ -154,41 +168,25 @@ public class ModifyPartController implements Initializable {
                 return;
             }
             if (outSourced){
-                OutSourced outPart = new OutSourced();
-                outPart.setPartId(partID);
-                outPart.setPartName(name);
-                outPart.setPartInv(inv);
-                outPart.setPartPrice(price);
-                outPart.setPartMin(min);
-                outPart.setPartMax(max);
-                companyName = modPartMachIdText.getText();
-                outPart.setCompanyName(companyName);       
+                OutSourced outPart = new OutSourced(partID, name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max), modPartMachIdText.getText());    
                 Inventory.updatePart(partIndex, outPart);
             } else {
-                InHouse inPart = new InHouse();
-                inPart.setPartId(partID);
-                inPart.setPartName(name);
-                inPart.setPartInv(inv);
-                inPart.setPartPrice(price);
-                inPart.setPartMin(min);
-                inPart.setPartMax(max);
-                machineId = Integer.parseInt(modPartMachIdText.getText());
-                inPart.setMachineId(machineId);       
+                InHouse inPart = new InHouse(partID, name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max), Integer.parseInt(modPartMachIdText.getText()));
                 Inventory.updatePart(partIndex, inPart);
         }
         sceneChange("mainPage.fxml", event);          
         } catch(NumberFormatException e){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error!");
-            alert.setHeaderText("Error!");
-            alert.setContentText("Fields cannot be empty!");
-            alert.showAndWait();
+            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+            alert2.setTitle("Error!");
+            alert2.setHeaderText("Error!");
+            alert2.setContentText("invalid input types!");
+            alert2.showAndWait();
         }
             
     }
     
     /**
-     *
+     * changes scene
      * @param path of the new scene
      * @param event that caused the scene change
      * @throws IOException

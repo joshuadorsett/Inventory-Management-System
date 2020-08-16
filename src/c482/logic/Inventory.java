@@ -5,23 +5,30 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /** @author Joshua Paul Dorsett
+ * 
+ * this class holds the static inventory of products and parts
+ * it includes methods for navigating through these items
  */
 
 public class Inventory {
-//    static attributes
+    /**
+    * static attributes
+    */
     private static ObservableList<Part> allParts = FXCollections.observableArrayList();
     private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
     private static int partIdCounter;
     private static int productIdCounter;
 
-//    constructor
+    /**
+    * constructor
+    */    
     Inventory(){
         partIdCounter = 0;
         productIdCounter = 0;
     }
     
-//    get the current ID count
     /**
+     * Getter for part ID count
      * @return current part ID count
      */
     public static int getPartIdCounter() {
@@ -29,28 +36,31 @@ public class Inventory {
     }
 
     /**
+     * Getter for product ID count
      * @return current product ID count
      */
     public static int getProductIdCounter() {
         return productIdCounter++;
     }
     
-//    add new items to inventory lists
     /**
+     * adds a part to inventory
      * @param newPart to be added
      */
     public static void addPart(Part newPart){
         allParts.add(newPart);
     }
+    
     /**
+     * adds a product to inventory
      * @param newProduct to be added
      */
     public static void addProduct(Product newProduct){
         allProducts.add(newProduct);
     }    
       
-//      lookup methods
     /**
+     * looks up part with ID or name
      * @param part to find
      * @return the part
      */
@@ -59,14 +69,14 @@ public class Inventory {
         int index = 0;
         if (isInteger(part)){
             for (int i = 0; i < allParts.size(); i++) {
-                if (Integer.parseInt(part) == allParts.get(i).getPartId()) {
+                if (Integer.parseInt(part) == allParts.get(i).getId()) {
                     index = i;
                     found = true;
                 }
             }
         } else {
             for (int i = 0; i < allParts.size(); i++) {
-                if (part.equals(allParts.get(i).getPartName())) {
+                if (part.equals(allParts.get(i).getName())) {
                     index = i;
                     found = true;
                 }
@@ -79,7 +89,9 @@ public class Inventory {
             return -1;
         }
     }
+    
     /**
+     * looks up product with ID or name
      * @param product to find
      * @return the product
      */
@@ -108,8 +120,9 @@ public class Inventory {
             return -1;
         }
     }
+    
     /**
-     *
+     * checks to see if string is an integer
      * @param s is the string to check
      * @return true if s can be an int
      */
@@ -124,24 +137,25 @@ public class Inventory {
         return true;
 }
     
-//    updates inventory methods
     /**
-     * @param index
-     * @param selectedPart
+     * updates an existing part
+     * @param index index
+     * @param selectedPart part selected
      */
     public static void updatePart ( int index, Part selectedPart){
         allParts.set(index, selectedPart);
     }
     /**
-     * @param index
-     * @param newProduct
+     * update an existing product
+     * @param index index
+     * @param newProduct  new updated product
      */
     public static void updateProduct( int index, Product newProduct){
         allProducts.set(index, newProduct);
     }
        
-//    delete methods
     /**
+     * deletes an existing part
      * @param selectedPart to be deleted
      * @return true if the part was deleted
      */
@@ -156,8 +170,9 @@ public class Inventory {
         }
         return isDeleted;
     }
+    
     /**
-     *
+     * deletes an existing product
      * @param selectedProduct to be deleted
      * @return true if the product was deleted
      */
@@ -173,8 +188,8 @@ public class Inventory {
         return isDeleted;
     }
        
-//    get the inventory lists
     /**
+     * returns list of all parts
      * @return an observable list of all parts
      */
     public static ObservableList<Part> getAllParts() {
@@ -182,6 +197,7 @@ public class Inventory {
         }
 
     /**
+     * returns a list of all products
      * @return an observable list of all products
      */
     public static ObservableList<Product> getAllProducts() {

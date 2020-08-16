@@ -1,99 +1,111 @@
 package c482.logic;
 
- /** @author Joshua Paul Dorsett
-        */
+///**
+//* Supplied class Part.java 
+// */
+//
+///**
+// *
+// * @author Joshua Paul Dorsett
+// */
 public abstract class Part {
+    private int id;
+    private String name;
+    private double price;
+    private int stock;
+    private int min;
+    private int max;   
     
+    public Part(int id, String name, double price, int stock, int min, int max) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.min = min;
+        this.max = max;
+    }
+
     /**
-     * instance attributes
+     * @return the id
      */
-    private int partId;
-    private String partName;
-    private double partPrice;
-    private int partInv;
-    private int partMin;
-    private int partMax;
-    
-    /**
-     * constructor
-     */ 
-    public Part() {
-        this.partId = 0;
-        this.partName = "default";
-        this.partPrice = 0.00;
-        this.partInv = 0;
-        this.partMin = 0;
-        this.partMax = 0;
+    public int getId() {
+        return id;
     }
-   
+
     /**
-     * set and get methods for instance attributes
+     * @param id the id to set
      */
-    public void setPartId(int id) { 
-        this.partId = id; 
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getPartId() { 
-        return partId; 
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
     }
 
-
-    public void setPartName(String name) { 
-        this.partName = name; 
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPartName() { 
-        return partName; 
+    /**
+     * @return the price
+     */
+    public double getPrice() {
+        return price;
     }
 
-
-    public void setPartPrice(double price) { 
-        this.partPrice = price; 
-    }
-    public double getPartPrice() { 
-        return partPrice; 
-    }
-
-    public void setPartInv(int inv) { 
-        this.partInv = inv; 
-    }
-    public int getPartInv() { 
-        return partInv; 
-    }
-
-
-    public void setPartMin(int min) { 
-        this.partMin = min; 
-    }
-    public int getPartMin() { 
-        return partMin; 
-    }
-
-
-    public void setPartMax(int max) { 
-        this.partMax = max; 
-    }
-
-    public int getPartMax() { 
-        return partMax; 
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(double price) {
+        this.price = price;
     }
     
     /**
-     * validate part and return error message
-     * @param name is checked to see if it's empty
-     * @param price must be greater than 0
-     * @param inv must be greater than 0 and between min and max
-     * @param min must be less than max and inv
-     * @param max must be greater than min and inv
-     * @param exceptionMessage this empty string will carry the message
-     * @return the full exception message string
+     * @return the stock
      */
-    public static String validPart(String name, double price, int inv, int min, int max, String exceptionMessage) {
-        if (name == null) exceptionMessage = exceptionMessage + ("Name cannot be empty. ");         
-        if (price < 1) exceptionMessage = exceptionMessage + ("Price must be greater than 0. ");         
-        if (inv < 1) exceptionMessage = exceptionMessage + ("Inventory must be greater than 0. ");         
-        if (min > max) exceptionMessage = exceptionMessage + ("Min must be less than Max. ");      
-        if (inv < min || inv > max) exceptionMessage = exceptionMessage + ("Inventory must be between Min and Max. ");        
-        return exceptionMessage;
+    public int getStock() {
+        return stock;
+    }
+
+    /**
+     * @param stock the stock to set
+     */
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    /**
+     * @return the min
+     */
+    public int getMin() {
+        return min;
+    }
+
+    /**
+     * @param min the min to set
+     */
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    /**
+     * @return the max
+     */
+    public int getMax() {
+        return max;
+    }
+
+    /**
+     * @param max the max to set
+     */
+    public void setMax(int max) {
+        this.max = max;
     }
 }
