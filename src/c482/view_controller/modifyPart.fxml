@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="450.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="c482.view_controller.ModifyPartController">
+   <children>
+      <Text layoutX="15.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Modify Part" wrappingWidth="89.22900390625">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <RadioButton fx:id="InHouseRadioSelected" layoutX="120.0" layoutY="15.0" mnemonicParsing="false" onAction="#InHouseSelected" selected="true" text="In House">
+         <toggleGroup>
+            <ToggleGroup fx:id="InHouseOrOutSourced" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="OutSourcedRadioSelected" layoutX="210.0" layoutY="15.0" mnemonicParsing="false" onAction="#OutSourcedSelected" selected="true" text="OutSourced" toggleGroup="$InHouseOrOutSourced" />
+      <TextField fx:id="modPartNameText" layoutX="140.0" layoutY="100.0" promptText="Part Name" />
+      <TextField fx:id="modInvText" layoutX="140.0" layoutY="140.0" promptText="Inventory" />
+      <TextField fx:id="modPriceText" layoutX="140.0" layoutY="180.0" promptText="Price" />
+      <TextField fx:id="modMinText" layoutX="140.0" layoutY="220.0" promptText="Min" />
+      <TextField fx:id="modMaxText" layoutX="140.0" layoutY="260.0" promptText="Max" />
+      <TextField fx:id="modPartMachIdText" layoutX="140.0" layoutY="300.0" />
+      <Text layoutX="40.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Part ID" wrappingWidth="100" />
+      <Text layoutX="40.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Part Name" wrappingWidth="100" />
+      <Text layoutX="40.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Inventory" wrappingWidth="100" />
+      <Text layoutX="40.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price" wrappingWidth="100" />
+      <Text layoutX="40.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Min" wrappingWidth="100" />
+      <Text layoutX="40.0" layoutY="275.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max" wrappingWidth="100" />
+      <Text fx:id="ModifyPartDynamicLabel" layoutX="40.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Company Name" wrappingWidth="100" />
+      <Button fx:id="CancelModifiedPartButton" layoutX="240.0" layoutY="350.0" mnemonicParsing="false" onAction="#CancelModifiedPart" text="Cancel" />
+      <Button fx:id="saveModifiedPartButton" layoutX="160.0" layoutY="350.0" mnemonicParsing="false" onAction="#saveModifiedPart" text="Save" />
+      <Text fx:id="modPartIDText" layoutX="141.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Auto Generated" wrappingWidth="100">
+         <font>
+            <Font name="System Italic" size="13.0" />
+         </font>
+      </Text>
+
+               </children>
+</AnchorPane>
