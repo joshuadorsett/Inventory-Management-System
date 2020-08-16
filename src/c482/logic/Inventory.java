@@ -4,10 +4,11 @@ package c482.logic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/** @author Joshua Paul Dorsett
- * 
- * this class holds the static inventory of products and parts
- * it includes methods for navigating through these items
+/** 
+ * This class holds the static inventory of products and parts.
+ * It includes methods for navigating through these items.
+ * in a future version this inventory will be added into a Database and there will be methods for converting the Java objects into entries into the table with SQL.
+ * @author Joshua Paul Dorsett
  */
 
 public class Inventory {
@@ -20,7 +21,7 @@ public class Inventory {
     private static int productIdCounter;
 
     /**
-    * constructor
+    * constructor for Inventory class.
     */    
     Inventory(){
         partIdCounter = 0;
@@ -28,41 +29,45 @@ public class Inventory {
     }
     
     /**
-     * Getter for part ID count
-     * @return current part ID count
+     * Getter for part ID count.
+     * This is used to make a new ID for each new part, however the counter is kept the same for modifications.
+     * @return current part ID count.
      */
     public static int getPartIdCounter() {
         return partIdCounter++;
     }
 
     /**
-     * Getter for product ID count
-     * @return current product ID count
+     * Getter for product ID count.
+     *This is used to make a new ID for each new product, however the counter is kept the same for modifications.
+     * @return current product ID count.
      */
     public static int getProductIdCounter() {
         return productIdCounter++;
     }
     
     /**
-     * adds a part to inventory
-     * @param newPart to be added
+     * adds a part to inventory.
+     * in a future version this will inventory will be added into a Database and there will be methods for converting the Java object into SQL.
+     * @param newPart to be added.
      */
     public static void addPart(Part newPart){
         allParts.add(newPart);
     }
     
     /**
-     * adds a product to inventory
-     * @param newProduct to be added
+     * adds a product to inventory.
+     * in a future version this will inventory will be added into a Database and there will be methods for converting the Java object into SQL.
+     * @param newProduct to be added.
      */
     public static void addProduct(Product newProduct){
         allProducts.add(newProduct);
     }    
       
     /**
-     * looks up part with ID or name
-     * @param part to find
-     * @return the part
+     * looks up part with ID or name.
+     * @param part to find.
+     * @return the part.
      */
     public static int lookupPart(String part){
         boolean found = false;
@@ -91,9 +96,9 @@ public class Inventory {
     }
     
     /**
-     * looks up product with ID or name
-     * @param product to find
-     * @return the product
+     * looks up product with ID or name.
+     * @param product to find.
+     * @return the product.
      */
     public static int lookupProduct(String product){
         boolean found = false;
@@ -122,9 +127,9 @@ public class Inventory {
     }
     
     /**
-     * checks to see if string is an integer
-     * @param s is the string to check
-     * @return true if s can be an int
+     * checks to see if string is an integer.
+     * @param s is the string to check.
+     * @return true if s can be an int.
      */
     public static boolean isInteger(String s) {
         try { 
@@ -138,7 +143,7 @@ public class Inventory {
 }
     
     /**
-     * updates an existing part
+     * updates an existing part.
      * @param index index
      * @param selectedPart part selected
      */
@@ -146,7 +151,7 @@ public class Inventory {
         allParts.set(index, selectedPart);
     }
     /**
-     * update an existing product
+     * update an existing product.
      * @param index index
      * @param newProduct  new updated product
      */
@@ -155,7 +160,7 @@ public class Inventory {
     }
        
     /**
-     * deletes an existing part
+     * deletes an existing part.
      * @param selectedPart to be deleted
      * @return true if the part was deleted
      */
@@ -172,7 +177,7 @@ public class Inventory {
     }
     
     /**
-     * deletes an existing product
+     * deletes an existing product.
      * @param selectedProduct to be deleted
      * @return true if the product was deleted
      */
@@ -189,7 +194,7 @@ public class Inventory {
     }
        
     /**
-     * returns list of all parts
+     * returns list of all parts.
      * @return an observable list of all parts
      */
     public static ObservableList<Part> getAllParts() {
@@ -197,7 +202,7 @@ public class Inventory {
         }
 
     /**
-     * returns a list of all products
+     * returns a list of all products.
      * @return an observable list of all products
      */
     public static ObservableList<Product> getAllProducts() {

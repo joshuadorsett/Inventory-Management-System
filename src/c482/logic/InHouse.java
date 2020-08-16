@@ -1,8 +1,9 @@
 package c482.logic;
 
-/** @author Joshua Paul Dorsett
- * 
- * This class extends part to make an InHouse Part with a machine code
+/** 
+ * This class extends Part class to make an InHouse Part.
+ * It adds a machine code for the machine used in house.
+ * @author Joshua Paul Dorsett
  */
 public class InHouse extends Part {
     /**
@@ -11,7 +12,9 @@ public class InHouse extends Part {
     private int machineId;
     
     /**
-     * constructor for InHouse
+     * Constructor for InHouse class.
+     * This calls super() to access the Part constructor for the first 6 arguments.
+     * It then sets machine ID argument in this.machineId.
      * @param id int
      * @param name String
      * @param price double
@@ -26,16 +29,16 @@ public class InHouse extends Part {
     }
     
     /**
-     * Setter for machine ID
-     * @param machineId is set into this.machineId
+     * Setter for machine ID.
+     * @param machineId is set into this.machineId for this instance of InHouse.
      */
     public void setMachineId(int machineId){
         this.machineId = machineId;
     }
 
     /**
-     * Getter for machine ID
-     * @return machine ID
+     * Getter for machine ID.
+     * @return machine ID for this instance of InHouse.
      */
     public int getMachineId(){ 
         return this.machineId; 

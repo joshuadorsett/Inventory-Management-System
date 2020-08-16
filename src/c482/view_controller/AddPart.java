@@ -19,7 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class for add part page
+ * FXML Controller class for add part page.
  *
  * @author joshuadorsett
  */
@@ -47,34 +47,36 @@ public class AddPart {
     private String exceptionMessage = new String();
   
     /**
-     * InHouse Radio button
-     * @param event event
+     * InHouse Radio button.
+     * sets the text to machine id and the field to an example integer.
+     * @param event action event from the radio button.
      */
     @FXML
-    private void InHouseSelected(ActionEvent event) {        
+    public void InHouseSelected(ActionEvent event) {        
         outSourced = false;
         AddPartDynamicLabel.setText("Machine ID");
         addPartDynText.setText("0");
     }
  
     /**
-     * OutSourced Radio Button
-     * @param event event
+     * OutSourced Radio Button.
+     * sets the text to company name and the field to an example string.
+     * @param event action event from the radio button.
      */
     @FXML
-    private void OutSourcedSelected(ActionEvent event) {
+    public void OutSourcedSelected(ActionEvent event) {
         outSourced = true;
         AddPartDynamicLabel.setText("Company Name");
         addPartDynText.setText("company name");
     }
 
     /**
-     * Cancel the part
-     * @param event event
-     * @throws IOException 
+     * Cancels the part.
+     * @param event action event from the cancel button.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
-    private void cancelAddedPart(ActionEvent event) throws IOException {
+    public void cancelAddedPart(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initModality(Modality.NONE);
         alert.setTitle("Confirmation Needed");
@@ -87,12 +89,13 @@ public class AddPart {
     }
     
     /**
-     * validate and save the part
-     * @param event event
-     * @throws IOException 
+     * validate and saves the part.
+     * @param event action event from the save button.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
+     * @throws NumberFormatException this exception is thrown if there is an invalid entry in the text fields from a string attempting to be converted to a number. This program then catches it and sends an alert.
      */
     @FXML
-    private void saveAddedPart(ActionEvent event) throws IOException {   
+    public void saveAddedPart(ActionEvent event) throws IOException {   
         try {
             String name = addPartNameText.getText();
             String price = addPriceText.getText();
@@ -132,10 +135,10 @@ public class AddPart {
     }
     
     /**
-     * changes scenes
-     * @param path of the new scene
-     * @param event that caused the scene change
-     * @throws IOException
+     * changes scenes.
+     * @param path path of the new scene
+     * @param event action even that caused the scene change
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     public void sceneChange(String path, ActionEvent event) throws IOException {
         Parent addPartParent = FXMLLoader.load(getClass().getResource(path));

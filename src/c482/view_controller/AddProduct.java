@@ -26,7 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class for add product page
+ * FXML Controller class for add product page.
  *
  * @author joshuadorsett
  */
@@ -68,7 +68,7 @@ public class AddProduct implements Initializable {
   /**
    * class attributes
    */
-    private ObservableList<Part> currentParts = FXCollections.observableArrayList();
+    private ObservableList<Part> temporaryPartsList = FXCollections.observableArrayList();
     private String exceptionMessage = new String();
 
     /**
@@ -85,32 +85,32 @@ public class AddProduct implements Initializable {
     }    
     
     /**
-     * add an associated part
-     * @param event event
+     * adds an associated part.
+     * @param event action event from the add button.
      */
     @FXML
-    private void addPart(ActionEvent event) {
+    public void addPart(ActionEvent event) {
         Part part = allPartsTableView.getSelectionModel().getSelectedItem();
         boolean repeatedItem = false;
         if (part != null) {
             int partId = part.getId();
-            for (int i = 0; i < currentParts.size(); i++) {
-                if (currentParts.get(i).getId() == partId) {
+            for (int i = 0; i < temporaryPartsList.size(); i++) {
+                if (temporaryPartsList.get(i).getId() == partId) {
                     repeatedItem = true;
                 }
             }
             if (!repeatedItem) {
-                currentParts.add(part);
-                generateAssociatedPartsTable(currentParts);
+                temporaryPartsList.add(part);
+                generateAssociatedPartsTable(temporaryPartsList);
             }       
         }
     }
      
     /**
-     * generates an updated associated parts table
+     * generates an updated associated parts table. this gets called whenever there is a change made to the temporary list.
      * @param table of current parts selection
      */
-    private void generateAssociatedPartsTable(ObservableList<Part> table){
+    public void generateAssociatedPartsTable(ObservableList<Part> table){
         associatedPartsTableView.setItems(table);
         addProductCurrentPartIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         addProductCurrentPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -119,11 +119,12 @@ public class AddProduct implements Initializable {
     }
     
     /**
-     * search field for parts
-     * @param event event
+     * search field for parts.
+     * In a future version there will be a second search field to search through the associated parts table.
+     * @param event action event from hitting enter in the text field.
      */
     @FXML
-    private void addPartsSearchField(ActionEvent event){
+    public void addPartsSearchField(ActionEvent event){
         String searchPart = addPartsSearchField.getText();
         int partIndex = -1;
         if (searchPart.length() == 0){
@@ -146,11 +147,11 @@ public class AddProduct implements Initializable {
     }
      
     /**
-     * remove an associated part from product
-     * @param event event
+     * remove an associated part from product.
+     * @param event action cause by the remove associated parts button.
      */
     @FXML
-    private void RemoveAssociatedPart(ActionEvent event) {
+    public void RemoveAssociatedPart(ActionEvent event) {
         Part part = associatedPartsTableView.getSelectionModel().getSelectedItem();
         if (part == null){
             return;
@@ -162,17 +163,17 @@ public class AddProduct implements Initializable {
         alert.setContentText("Are you sure you want to remove associated part?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-        currentParts.remove(part);
+        temporaryPartsList.remove(part);
         }
     }
 
     /**
-     * cancels the product
-     * @param event event
-     * @throws IOException 
+     * cancels the product.
+     * @param event event.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
-    private void addProductCancelButton(ActionEvent event) throws IOException {
+    public void addProductCancelButton(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initModality(Modality.NONE);
         alert.setTitle("Confirmation Needed");
@@ -185,12 +186,13 @@ public class AddProduct implements Initializable {
     } 
     
     /**
-     * validates and saves the product
-     * @param event event
-     * @throws IOException 
+     * validates and saves the product.
+     * @param event action event from the save button.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
+     * @throws NumberFormatException this exception is thrown if there is an invalid entry in the text fields from a string attempting to be converted to a number. This program then catches it and sends an alert.
      */
     @FXML
-    private void addProductSaveButton(ActionEvent event) throws IOException {  
+    public void addProductSaveButton(ActionEvent event) throws IOException {  
         try {
             String name = AddProductNameText.getText();
             String inv = AddProductInvText.getText();
@@ -199,7 +201,7 @@ public class AddProduct implements Initializable {
             String max = AddProductMaxText.getText();
             int id = Inventory.getProductIdCounter();
             exceptionMessage = MainPageController.validProduct(name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max),
-            currentParts, exceptionMessage);
+            temporaryPartsList, exceptionMessage);
             if (exceptionMessage.length() > 0) {
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -211,7 +213,7 @@ public class AddProduct implements Initializable {
                 return;
             }
             Product product = new Product(id, name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max));
-            product.addAssociatedPartsList(currentParts);
+            product.addAssociatedPartsList(temporaryPartsList);
             Inventory.addProduct(product);
             sceneChange("mainPage.fxml", event);
             
@@ -225,10 +227,10 @@ public class AddProduct implements Initializable {
     }
     
     /**
-     * changes scene
-     * @param path of the new scene
-     * @param event that caused the scene change
-     * @throws IOException
+     * changes scenes.
+     * @param path path of the new scene.
+     * @param event action even that caused the scene change.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     public void sceneChange(String path, ActionEvent event) throws IOException {
         Parent addPartParent = FXMLLoader.load(getClass().getResource(path));

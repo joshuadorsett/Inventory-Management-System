@@ -6,9 +6,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/** @author Joshua Paul Dorsett
+/** 
  * 
- * this class opens the JavaFX application and navigates to the main page
+ * This class opens the JavaFX application and navigates to the main page.
+ * @author Joshua Paul Dorsett
  */
 public class JoshuaPaulDorsettC482 extends Application {
     

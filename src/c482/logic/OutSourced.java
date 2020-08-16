@@ -1,8 +1,8 @@
 package c482.logic;
 
-/** @author Joshua Paul Dorsett
- * 
- * This class extends the part to make an outsourced part with an associated company name
+/**
+ * This class extends the part to make an outsourced part with an associated company name.
+ * @author Joshua Paul Dorsett
  */
 public class OutSourced extends Part {
     /**
@@ -26,14 +26,14 @@ public class OutSourced extends Part {
     }
     
     /**
-     * Setter for company name
-     * @param compName is set into this.companyName
+     * Setter for company name.
+     * @param compName is set into this.companyName.
      */
     public void setCompanyName(String compName){this.companyName = compName;}
 
     /**
-     * Getter for company name
-     * @return company name
+     * Getter for company name.
+     * @return company name.
      */
     public String getCompanyName(){return this.companyName;}
 }

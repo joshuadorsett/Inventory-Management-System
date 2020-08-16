@@ -89,7 +89,7 @@ public class MainPageController implements Initializable {
        * @param event event
        */
     @FXML
-    void MainPartsSearch(ActionEvent event){
+    public void MainPartsSearch(ActionEvent event){
         String searchPart = MainPartsSearchField.getText();
         int partIndex = -1;
         if (searchPart.length() == 0){
@@ -117,7 +117,7 @@ public class MainPageController implements Initializable {
        * @param event event
        */
     @FXML
-    void MainProductsSearchField(ActionEvent event) {
+    public void MainProductsSearchField(ActionEvent event) {
         String searchProduct = MainProductsSearchField.getText();
         int productIndex = -1;
         if (searchProduct.length() == 0){
@@ -142,7 +142,7 @@ public class MainPageController implements Initializable {
     /**
      * opens the add parts scene
      * @param event event
-     * @throws IOException
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
     public void MainPartsAdd(ActionEvent event) throws IOException {
@@ -156,25 +156,25 @@ public class MainPageController implements Initializable {
      * @param inv must be greater than 0 and between min and max
      * @param min must be less than max and inv
      * @param max must be greater than min and inv
-     * @param exceptionMessage this empty string will carry the message
+     * @param error this empty string will carry the message of the accumulated errors
      * @return the full exception message string
      */
-    public static String validPart(String name, double price, int inv, int min, int max, String exceptionMessage) {
-        if (name.isEmpty()) exceptionMessage = exceptionMessage + ("Name cannot be empty. ");         
-        if (price < 1) exceptionMessage = exceptionMessage + ("Price must be greater than 0. ");         
-        if (inv < 1) exceptionMessage = exceptionMessage + ("Inventory must be greater than 0. ");         
-        if (min > max) exceptionMessage = exceptionMessage + ("Min must be less than Max. ");      
-        if (inv < min || inv > max) exceptionMessage = exceptionMessage + ("Inventory must be between Min and Max. ");   
-        return exceptionMessage;
+    public static String validPart(String name, double price, int inv, int min, int max, String error) {
+        if (name.isEmpty()) error = error + ("Name cannot be empty. ");         
+        if (price < 1) error = error + ("Price must be greater than 0. ");         
+        if (inv < 1) error = error + ("Inventory must be greater than 0. ");         
+        if (min > max) error = error + ("Min must be less than Max. ");      
+        if (inv < min || inv > max) error = error + ("Inventory must be between Min and Max. ");   
+        return error;
     }
  
     /**
      * opens the add products scene
      * @param event event
-     * @throws IOException 
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
-    void MainProdAdd(ActionEvent event) throws IOException {
+    public void MainProdAdd(ActionEvent event) throws IOException {
         sceneChange("addProduct.fxml", event);
 
     }
@@ -187,29 +187,29 @@ public class MainPageController implements Initializable {
      * @param min must be less than max and inv
      * @param max must be greater than min and inv
      * @param parts must have at least one associated part
-     * @param exceptionMessage this empty string will carry the message
+     * @param error this empty string will carry the message of the accumulated errors
      * @return the full exception message string
      */
-    public static String validProduct(String name, double price, int inv, int min, int max, ObservableList<Part> parts, String exceptionMessage) {
+    public static String validProduct(String name, double price, int inv, int min, int max, ObservableList<Part> parts, String error) {
         double partsCost = 0.00;
         for (Part p : parts) partsCost = partsCost + p.getPrice();
         
-        if (name.isEmpty()) exceptionMessage = exceptionMessage + ("Name cannot be empty. "); 
-        if (price < 0) exceptionMessage = exceptionMessage + ("Price must be greater than 0. ");
-        if (inv < min || inv > max) exceptionMessage = exceptionMessage + ("Inventory must be between Min and Max. ");
-        if (min < 0) exceptionMessage = exceptionMessage + ("Inventory must be greater than 0. ");
-        if (min > max) exceptionMessage = exceptionMessage + ("Min must be less than Max. ");
-        if (partsCost > price) exceptionMessage = exceptionMessage + ("Price of product must be greater than cost of all associated parts. ");
-        return exceptionMessage;
+        if (name.isEmpty()) error = error + ("Name cannot be empty. "); 
+        if (price < 0) error = error + ("Price must be greater than 0. ");
+        if (inv < min || inv > max) error = error + ("Inventory must be between Min and Max. ");
+        if (min < 0) error = error + ("Inventory must be greater than 0. ");
+        if (min > max) error = error + ("Min must be less than Max. ");
+        if (partsCost > price) error = error + ("Price of product must be greater than cost of all associated parts. ");
+        return error;
     }
     
     /**
      * opens the modify parts scene
      * @param event event
-     * @throws IOException 
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
-    void MainPartsModify(ActionEvent event) throws IOException  {
+    public void MainPartsModify(ActionEvent event) throws IOException  {
         modifyPart = MainPartsTableView.getSelectionModel().getSelectedItem();
         modifyPartIndex = Inventory.getAllParts().indexOf(modifyPart);
         sceneChange("modifyPart.fxml", event);
@@ -226,10 +226,10 @@ public class MainPageController implements Initializable {
     /**
      * opens the modify products scene
      * @param event event
-     * @throws IOException 
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
-    void MainProdModify(ActionEvent event) throws IOException {
+    public void MainProdModify(ActionEvent event) throws IOException {
         modifyProduct = MainProductsTableView.getSelectionModel().getSelectedItem();
         modifyProductIndex = Inventory.getAllProducts().indexOf(modifyProduct);        
         sceneChange("modifyProduct.fxml", event);
@@ -247,7 +247,7 @@ public class MainPageController implements Initializable {
      * @param event event
      */
     @FXML
-    void MainPartsDelete(ActionEvent event) {
+    public void MainPartsDelete(ActionEvent event) {
         Part part = MainPartsTableView.getSelectionModel().getSelectedItem();
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.initModality(Modality.NONE);
@@ -271,10 +271,10 @@ public class MainPageController implements Initializable {
     /**
      * deletes the selected product if there are no associated parts
      * @param event event
-     * @throws IOException 
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
-    void MainProdDelete(ActionEvent event) throws IOException {
+    public void MainProdDelete(ActionEvent event) throws IOException {
         Product product = MainProductsTableView.getSelectionModel().getSelectedItem();
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.initModality(Modality.NONE);
@@ -301,11 +301,11 @@ public class MainPageController implements Initializable {
     }
 
     /**
-     * exits the program
-     * @param event event
+     * exits the program after asking for confirmation.
+     * @param event action event from the main exit button.
      */
     @FXML
-     void MainExit(ActionEvent event) {
+    public void MainExit(ActionEvent event) {
          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initModality(Modality.NONE);
         alert.setTitle("Confirmation Needed");
@@ -320,10 +320,10 @@ public class MainPageController implements Initializable {
     }
 
     /**
-     * changes scene
-     * @param path of the new scene
-     * @param event that caused the scene change
-     * @throws IOException
+     * changes scenes.
+     * @param path path of the new scene.
+     * @param event action even that caused the scene change.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     public void sceneChange(String path, ActionEvent event) throws IOException {
         Parent addPartParent = FXMLLoader.load(getClass().getResource(path));

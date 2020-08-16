@@ -75,7 +75,7 @@ public class ModifyProductController implements Initializable {
     private ObservableList<Product> allProducts;
     private Product product;
     private int productId;
-    private ObservableList<Part> currentParts = FXCollections.observableArrayList();
+    private ObservableList<Part> temporaryPartsList = FXCollections.observableArrayList();
     private String exceptionMessage = new String();
 
     /**
@@ -90,7 +90,7 @@ public class ModifyProductController implements Initializable {
 //        adding all associated parts for selected product to a current list of associated parts
         ObservableList<Part> associatedParts = product.getAssociatedParts();
         for (Part p : associatedParts){
-            currentParts.add(p);
+            temporaryPartsList.add(p);
         }
         
 //        init the text fields
@@ -109,14 +109,14 @@ public class ModifyProductController implements Initializable {
         ModifyProductPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));  
         
 //        init associated parts table
-        generateModAssociatedPartsTable(currentParts);         
+        generateModAssociatedPartsTable(temporaryPartsList);         
     }      
     
     /**
      * generates an updated associated parts table
      * @param table table of current parts selected
      */
-    private void generateModAssociatedPartsTable(ObservableList<Part> table){
+    public void generateModAssociatedPartsTable(ObservableList<Part> table){
         modAssociatedPartsTableView.setItems(table);
         ModifyProductCurrentPartIDCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         ModifyProductCurrentPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -129,7 +129,7 @@ public class ModifyProductController implements Initializable {
      * @param event event
      */
     @FXML
-    private void modAddPartsSearchField(ActionEvent event){
+    public void modAddPartsSearchField(ActionEvent event){
         String searchPart = modAddPartsSearchField.getText();
         int partIndex = -1;
         if (searchPart.length() == 0){
@@ -156,19 +156,19 @@ public class ModifyProductController implements Initializable {
      * @param event event
      */
     @FXML
-    private void modAddassociatedPart(ActionEvent event) {
+    public void modAddassociatedPart(ActionEvent event) {
         Part part = modAllPartsTableView.getSelectionModel().getSelectedItem();
         boolean repeatedItem = false;
         if (part != null) {
             int partId = part.getId();
-            for (int i = 0; i < currentParts.size(); i++) {
-                if (currentParts.get(i).getId() == partId) {
+            for (int i = 0; i < temporaryPartsList.size(); i++) {
+                if (temporaryPartsList.get(i).getId() == partId) {
                     repeatedItem = true;
                 }
             }
             if (!repeatedItem) {
-                currentParts.add(part);
-                generateModAssociatedPartsTable(currentParts);
+                temporaryPartsList.add(part);
+                generateModAssociatedPartsTable(temporaryPartsList);
             }       
         }
     }
@@ -178,7 +178,7 @@ public class ModifyProductController implements Initializable {
      * @param event event
      */
     @FXML
-    private void modRemoveAssociatedPart(ActionEvent event) {
+    public void modRemoveAssociatedPart(ActionEvent event) {
         Part part = modAssociatedPartsTableView.getSelectionModel().getSelectedItem();
         if (part == null){
             return;
@@ -190,18 +190,18 @@ public class ModifyProductController implements Initializable {
         alert.setContentText("Are you sure you want to remove associated part?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-        currentParts.remove(part);
-        generateModAssociatedPartsTable(currentParts);       
+        temporaryPartsList.remove(part);
+        generateModAssociatedPartsTable(temporaryPartsList);       
         }
     }  
         
     /**
      * cancels modifying the product
      * @param event event
-     * @throws IOException 
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
-    private void modProductCancelButton(ActionEvent event) throws IOException {
+    public void modProductCancelButton(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initModality(Modality.NONE);
         alert.setTitle("Confirmation Needed");
@@ -216,10 +216,11 @@ public class ModifyProductController implements Initializable {
     /**
      * validates and saves the product
      * @param event event
-     * @throws IOException 
+     * @throws IOException is thrown if it cannot access the FXML loader path.
+     * @throws NumberFormatException this exception is thrown if there is an invalid entry in the text fields from a string attempting to be converted to a number. This program then catches it and sends an alert.
      */
     @FXML
-    private void modProductSaveButton(ActionEvent event) throws IOException {  
+    public void modProductSaveButton(ActionEvent event) throws IOException {  
         try {
             String name = ModProductNameText.getText();
             String inv = ModProductInvText.getText();
@@ -227,7 +228,7 @@ public class ModifyProductController implements Initializable {
             String min = ModProductMinText.getText();
             String max = ModProductMaxText.getText();
             exceptionMessage = MainPageController.validProduct(name, Double.parseDouble(price), Integer.parseInt(inv), Integer.parseInt(min), Integer.parseInt(max),
-            currentParts, exceptionMessage);
+            temporaryPartsList, exceptionMessage);
             if (exceptionMessage.length() > 0) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error Modifying Product");
@@ -239,7 +240,7 @@ public class ModifyProductController implements Initializable {
                 }
             Product product = new Product(productId, name, Double.parseDouble(price), Integer.parseInt(inv),  
             Integer.parseInt(min), Integer.parseInt(max));
-            product.addAssociatedPartsList(currentParts);
+            product.addAssociatedPartsList(temporaryPartsList);
             Inventory.updateProduct(productIndex, product);
             sceneChange("mainPage.fxml", event);
         } catch(NumberFormatException e) {
@@ -252,10 +253,10 @@ public class ModifyProductController implements Initializable {
     }
     
     /**
-     * changes scene
-     * @param path of the new scene
-     * @param event that caused the scene change
-     * @throws IOException
+     * changes scenes.
+     * @param path path of the new scene
+     * @param event action even that caused the scene change
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     public void sceneChange(String path, ActionEvent event) throws IOException {
         Parent addPartParent = FXMLLoader.load(getClass().getResource(path));

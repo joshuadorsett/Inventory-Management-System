@@ -1,13 +1,9 @@
 package c482.logic;
+/**
+* Supplied class Part.java
+* @author Joshua Paul Dorsett
+*/
 
-///**
-//* Supplied class Part.java 
-// */
-//
-///**
-// *
-// * @author Joshua Paul Dorsett
-// */
 public abstract class Part {
     private int id;
     private String name;

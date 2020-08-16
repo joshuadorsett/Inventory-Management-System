@@ -26,7 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class for modify part page
+ * FXML Controller class for modify part page.
  *
  * @author joshuadorsett
  */
@@ -99,11 +99,12 @@ public class ModifyPartController implements Initializable {
     }    
 
     /**
-     * InHouse Radio button
-     * @param event event
+     * InHouse Radio button.
+     * sets the text to machine id and the field to an example integer.
+     * @param event action event caused by the radio button.
      */
     @FXML
-    private void InHouseSelected(ActionEvent event) {
+    public void InHouseSelected(ActionEvent event) {
         outSourced = false;
         ModifyPartDynamicLabel.setText("Machine ID");
         modPartMachIdText.setText("0");
@@ -111,11 +112,12 @@ public class ModifyPartController implements Initializable {
     }
     
     /**
-     * OutSourced Radio Button
-     * @param event event
+     * OutSourced Radio Button.
+     * sets the text to company name and the field to an example string.
+     * @param event action event caused by the radio button.
      */
     @FXML
-    private void OutSourcedSelected(ActionEvent event) {
+    public void OutSourcedSelected(ActionEvent event) {
         outSourced = true;
         ModifyPartDynamicLabel.setText("Company Name");
         modPartMachIdText.setText("company name");
@@ -123,12 +125,12 @@ public class ModifyPartController implements Initializable {
 
     
     /**
-     * Cancel modifying part
-     * @param event event
-     * @throws IOException 
+     * Cancel modifying part.
+     * @param event action event caused by the cancel button.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     @FXML
-    private void CancelModifiedPart(ActionEvent event) throws IOException {
+    public void CancelModifiedPart(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initModality(Modality.NONE);
         alert.setTitle("Confirmation Needed");
@@ -141,12 +143,13 @@ public class ModifyPartController implements Initializable {
     }
 
     /**
-     * validate and save the part
-     * @param event event
-     * @throws IOException 
+     * validate and save the part.
+     * @param event action event caused by the save button.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
+     * @throws NumberFormatException this exception is thrown if there is an invalid entry in the text fields from a string attempting to be converted to a number. This program then catches it and sends an alert.
      */
     @FXML
-    private void saveModifiedPart(ActionEvent event) throws IOException { 
+    public void saveModifiedPart(ActionEvent event) throws IOException { 
         try {
             String name = modPartNameText.getText();
             String inv = modInvText.getText();
@@ -186,10 +189,10 @@ public class ModifyPartController implements Initializable {
     }
     
     /**
-     * changes scene
-     * @param path of the new scene
-     * @param event that caused the scene change
-     * @throws IOException
+     * changes scenes.
+     * @param path path of the new scene.
+     * @param event action even that caused the scene change.
+     * @throws IOException is thrown if it cannot access the FXML loader path.
      */
     public void sceneChange(String path, ActionEvent event) throws IOException {
         Parent addPartParent = FXMLLoader.load(getClass().getResource(path));

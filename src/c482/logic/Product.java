@@ -3,9 +3,10 @@ package c482.logic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/** @author Joshua Paul Dorsett
- * 
- * this class creates a product instance
+/** 
+ * this class creates a Product instance.
+ * Each Product instance has a list of associated parts.
+ * @author Joshua Paul Dorsett
  */
 public class Product {
     /**
@@ -20,7 +21,7 @@ public class Product {
     private int productMax;
 
     /**
-     * constructor
+     * Constructor for Product class.
      * @param productId int
      * @param productName String
      * @param productPrice double
@@ -122,7 +123,7 @@ public class Product {
     }
 
     /**
-     * add list of associated parts
+     * adds list of associated parts
      * @param partsList adds current selection
      */
     public void addAssociatedPartsList(ObservableList<Part> partsList){
