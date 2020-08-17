@@ -17,16 +17,8 @@ public class Inventory {
     */
     private static ObservableList<Part> allParts = FXCollections.observableArrayList();
     private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
-    private static int partIdCounter;
-    private static int productIdCounter;
-
-    /**
-    * constructor for Inventory class.
-    */    
-    Inventory(){
-        partIdCounter = 0;
-        productIdCounter = 0;
-    }
+    private static int partIdCounter = 0;
+    private static int productIdCounter = 0;
     
     /**
      * Getter for part ID count.
